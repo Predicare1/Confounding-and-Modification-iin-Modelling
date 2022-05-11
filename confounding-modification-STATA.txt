@@ -1,0 +1,108 @@
+####################################################
+####################################################
+
+## Article 2: Assessing confounding and modification
+
+####################################################
+####################################################
+
+* Create interaction terms
+gen padmit = patient_visits*admit_source
+gen hadmit = hba1c*admit_source
+gen hpatient = hba1c*patient_visits
+gen hpadmit = hba1c*patient_visits*admit_source
+
+* Descriptive of inpatient baseline characteristics
+tab diabetesmed
+tab hba1c
+tab admit_source
+summarize patient_visits, detail
+
+* Check the distribution of diabetic medication change based on HbA1c levels
+tab diabetesmed hba1c
+
+* Fit the full model
+logit diabetesmed hba1c admit_source patient_visits padmit hadmit hpatient hpadmit
+
+* To reduce the output, add the nolog option
+logit diabetesmed hba1c admit_source patient_visits padmit hadmit hpatient hpadmit, nolog
+
+* Model 1: assessing admission source and patient visits as potential effect modifiers separately
+
+* Check for effect modification
+* Drop hpadmit
+logit diabetesmed hba1c admit_source patient_visits padmit hadmit hpatient, nolog
+
+* Drop hpatient
+logit diabetesmed hba1c admit_source patient_visits padmit hadmit, nolog
+
+* Model 2: Refit the model by dropping all interaction terms between HbA1c levels and admission source 
+* and keep the interaction term between HbA1c levels and patient visits.
+* Start assessing for confounding
+logit diabetesmed hba1c admit_source patient_visits padmit hpatient, nolog
+
+* Model 3: Refit the model by dropping the interaction terms between 
+* admission source and patient visits (padmit)
+logit diabetesmed hba1c admit_source patient_visits hpatient, nolog
+
+* Model 4: Refit the model by dropping the admission source variable
+* Final Model
+logit diabetesmed hba1c patient_visits hpatient, nolog
+
+* STATA outputs the confidence intervals for the variables
+
+* Convert the coefficients (log odds ratio) to odds ratio
+* To achieve that, I will add the or option to the final model
+logit diabetesmed hba1c patient_visits hpatient, nolog or
+
+* Figure 9: Estimated log odds (left) and odds (right) for exposed (elevated HbA1c) and unexposed (normal HbA1c) 
+* patients by number of patients visits for final logistic regression model
+
+* First, create the fitted values and call it yh (short for yhat)
+predict yh, xb
+
+* Create the plot on the left for figure 9
+twoway (line yh patient_visits if hba1c==0, sort lcolor(blue)lpattern(dash))(line yh patient_visits if hba1c==1, sort lcolor(blue)),legend(label(1 "unexposed")label(2 "exposed")) xtitle("Number of patient visits") ytitle("Estimated log odds") title("Exposed and unexposed log odds by patient visits")
+
+* Create the plot on the right for figure 9
+* Exponentiate the fitted values
+gen expyh = exp(yh)
+
+* Create a plot of odds ratio of exposed against unexposed
+twoway (line expyh patient_visits if hba1c==0, sort lcolor(blue)lpattern(dash))(line expyh patient_visits if hba1c==1, sort lcolor(blue)),legend(label(1 "unexposed")label(2 "exposed")) xtitle("Number of patient visits") ytitle("Estimated odds") title("Exposed and unexposed odds by patient visits")
+
+####################################################
+####################################################
+
+## Article 3: The dangers of extrapolation
+
+####################################################
+####################################################
+
+* Summary statistics including the five-number summary and the mean of the number of patients visits
+summarize patient_visits, detail
+
+* Figure 2: Bar plot of the number of patient visits.
+graph bar (count), over(patient_visits, label(labsize(small))) b1title("Number of patient visits", size(small)) ytitle("Frequency", size(small)) title("Bar chart of patients visits")
+
+* Frequency table of the number of patients visits
+tab patient_visits
+
+* Refit the full model
+logit diabetesmed hba1c admit_source patient_visits padmit hadmit hpatient hpadmit, nolog
+
+* Create the new fitted values from the full model
+predict newyh, xb
+
+* Figure 4: Line plot of estimated log odds for exposed (elevated HbA1c) and unexposed (normal HbA1c) 
+* patients by admission source and number of patients visits for saturated model to check for extrapolation
+twoway (line newyh patient_visits if hba1c==0 & admit_source==0, sort lcolor(blue)lpattern(dash))(line newyh patient_visits if hba1c==1 & admit_source==0, sort lcolor(blue))(line newyh patient_visits if hba1c==0 & admit_source==1, sort lcolor(red)lpattern(dash))(line newyh patient_visits if hba1c==1 & admit_source==1, sort lcolor(red)), legend(label(1 "Emergency unexposed")label(2 "Emergency exposed") label(3 "Non-emergency unexposed") label(4 "Non-emergency exposed")) xtitle("Number of patient visits") ytitle("Estimated log odds") title("Exposed and unexposed log odds by patient visits")
+
+* Figure 5: Scatter plot of estimated log odds for exposed (elevated HbA1c) and unexposed (normal HbA1c) 
+* patients by admission source and number of patients visits for saturated model to check for extrapolation
+twoway (scatter newyh patient_visits if hba1c==0 & admit_source==0, sort lcolor(blue)lpattern(dash))(scatter newyh patient_visits if hba1c==1 & admit_source==0, sort lcolor(blue))(scatter newyh patient_visits if hba1c==0 & admit_source==1, sort lcolor(red)lpattern(dash))(scatter newyh patient_visits if hba1c==1 & admit_source==1, sort lcolor(red)), legend(label(1 "Emergency unexposed")label(2 "Emergency exposed") label(3 "Non-emergency unexposed") label(4 "Non-emergency exposed")) xtitle("Number of patient visits") ytitle("Estimated log odds") title("Exposed and unexposed log odds by patient visits")
+
+* Filter the data to include only patients with less than or equal to 20 visits.
+keep if patient_visits <= 20
+
+* Notice that only 15 observations were deleted.
