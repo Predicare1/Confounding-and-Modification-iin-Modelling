@@ -12,4 +12,4 @@ You can read the articles below:
 
 **Article 3:** The dangers of extrapolation in modelling [here]()
 
-This repository contains the R and STATA codes used to perform the analysis explained in the articles.
+This repository contains the dataset, R and STATA codes used to perform the analysis explained in the articles.
