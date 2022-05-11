@@ -1,5 +1,4 @@
-# Confounding-and-Modification-iin-Modelling
-This repository contains R and STATA codes used to perform the analysis.
+# Confounding-and-Modification-in-Modelling
 
 Have you heard about confounding and modification and would like to learn about it? Or did you click on this link out of curiosity? Then, hold on! This will be a short and precise introduction to understanding confounding and modification in modelling.
 
@@ -12,3 +11,5 @@ You can read the articles below:
 **Article 2:** A case study: Assessing confounding and modification using logistic regression in R [here]()
 
 **Article 3:** The dangers of extrapolation in modelling [here]()
+
+This repository contains the R and STATA codes used to perform the analysis explained in the articles.
