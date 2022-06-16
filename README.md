@@ -10,6 +10,6 @@ You can read the articles below:
 
 **Article 2:** A case study: Assessing confounding and modification using logistic regression in R [here](https://arimoroolayinka.medium.com/a-case-study-assessing-confounding-and-modification-using-logistic-regression-in-r-and-stata-2be659cbb813)
 
-**Article 3:** The dangers of extrapolation in modelling [here]()
+**Article 3:** The dangers of extrapolation in modelling [here](https://arimoroolayinka.medium.com/the-dangers-of-extrapolation-in-modelling-dd3758b4ae44)
 
 This repository contains the dataset, R and STATA codes used to perform the analysis explained in the articles.
