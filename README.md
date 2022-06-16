@@ -6,9 +6,9 @@ Recently, I learnt about confounding and effect modification and the impacts it 
 
 You can read the articles below:
 
-**Article 1:** Confounding and modification in modelling explained [here]()
+**Article 1:** Confounding and modification in modelling explained [here](https://arimoroolayinka.medium.com/confounding-and-modification-in-modelling-explained-c37dbe7b40ff)
 
-**Article 2:** A case study: Assessing confounding and modification using logistic regression in R [here]()
+**Article 2:** A case study: Assessing confounding and modification using logistic regression in R [here](https://arimoroolayinka.medium.com/a-case-study-assessing-confounding-and-modification-using-logistic-regression-in-r-and-stata-2be659cbb813)
 
 **Article 3:** The dangers of extrapolation in modelling [here]()
 
